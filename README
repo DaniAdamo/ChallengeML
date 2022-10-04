@@ -1,0 +1,89 @@
+# Ejecución de Flask - Pre setup
+
+0.  Tener instalada una base de datos Postgresql, y que el nombre sea: dbchallenge
+
+1.  Crear una venv e ingresar en el ambiente
+
+```
+python3 -m venv venv
+source venv/bin/activate
+```
+
+2. install requirements.txt
+
+```
+pip install -r requirements.txt
+```
+
+3. Setear FLASK_APP
+
+```
+export FLASK_APP=run:app
+```
+
+4. Ejecutar las migraciones (Solo la primera vez)
+
+```
+flask db upgrade
+```
+
+
+# Ejecutar flask
+
+0. Setear FLASK_APP si no está seteada
+
+```
+export FLASK_APP=run:app
+```
+
+1. Ejecutar flask
+
+```
+flask run
+```
+
+#  Uso del sistema
+
+1. Login**
+
+```
+curl 127.0.0.1:5000/login -H 'Content-type: application/json' -d '{"username": "admin", "password": "admin123"}'
+{
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY2NDU3OTE4MywianRpIjoiMGM4YmEzOGQtMjJjMy00OGJlLTk0ODctYmQzMGFlZDlmMDhkIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6ImFkbWluIiwibmJmIjoxNjY0NTc5MTgzLCJleHAiOjE2NjQ1ODAwODMsInJvbGUiOiJBZG1pbmlzdHJhdG9yIn0.YuCNXIwd3xG734Q4YeSJceHEXyHFE4kvIUwd88nL3cs"
+}
+```
+Eso retorna un token. Ese se usa para ejecutar los endpoints.
+
+2. Con el token lo agregamos en la cabecera de authorization:
+
+```
+curl 127.0.0.1:5000 -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY2NDU3OTE4MywianRpIjoiMGM4YmEzOGQtMjJjMy00OGJlLTk0ODctYmQzMGFlZDlmMDhkIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6ImFkbWluIiwibmJmIjoxNjY0NTc5MTgzLCJleHAiOjE2NjQ1ODAwODMsInJvbGUiOiJBZG1pbmlzdHJhdG9yIn0.YuCNXIwd3xG734Q4YeSJceHEXyHFE4kvIUwd88nL3cs'
+```
+
+Si no se usa la cabecera da error
+
+```
+curl 127.0.0.1:5000
+{
+  "msg": "Missing Authorization Header"
+}
+```
+
+3. Descargar datos:
+
+```
+curl 127.0.0.1:5000/download-data -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY2NDU3OTE4MywianRpIjoiMGM4YmEzOGQtMjJjMy00OGJlLTk0ODctYmQzMGFlZDlmMDhkIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6ImFkbWluIiwibmJmIjoxNjY0NTc5MTgzLCJleHAiOjE2NjQ1ODAwODMsInJvbGUiOiJBZG1pbmlzdHJhdG9yIn0.YuCNXIwd3xG734Q4YeSJceHEXyHFE4kvIUwd88nL3cs'
+```
+
+**Tener en cuenta que sólo el perfil de 'admin' tiene permiso para descargar la información.**
+User: admin
+Pass: admin123
+Rol: 1 = Administrator
+ 
+User: Nico
+Pass: challenge2022
+Rol: 2 = Reader
+ 
+User: Silvia
+Pass: meli2022
+Rol: 3 = Guest
